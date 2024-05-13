@@ -1,24 +1,26 @@
 cmake_minimum_required(VERSION 3.10)
 project(arduinoRc)
 
-add_executable(arduinoRc main.cpp)
-
-
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-set(OpenCV_DIR "/opt/homebrew/Cellar/opencv/4.9.0_8")
-set(OpenCV_INCLUDE_DIRS "/opt/homebrew/Cellar/opencv/4.9.0_8/include")
+if(APPLE)
+  # macos include paths
+  set(OpenCV_DIR "/opt/homebrew/Cellar/opencv/4.9.0_8")
+  set(OpenCV_INCLUDE_DIRS "/opt/homebrew/Cellar/opencv/4.9.0_8/include")
+  # elseif(UNIX AND NOT APPLE)
+  #   # linux include paths
+  #   set(OpenCV_DIR "/usr/")
+  #   set(OpenCV_INCLUDE_DIRS "/usr/")
+endif()
 set(INCLUDE_DIRS "../include")
-# target_link_libraries(arduinoRc wiringPi)
-
 # find_library: find OpenCV's object files
 # find_package: find OpenCV's CMakeLists.txt
 find_package(OpenCV REQUIRED)
 
-file(GLOB SOURCES "*.cpp")
+file(GLOB SOURCES "src/*.cpp")
 
 foreach(SOURCE ${SOURCES})
   get_filename_component(EXE_NAME ${SOURCE} NAME_WE)
