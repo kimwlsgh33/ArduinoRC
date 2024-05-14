@@ -1,8 +1,8 @@
 #include <SoftwareSerial.h>
 #include <OV7670_FIFO.h>
-const int rxPin = 0;  // WiFi 모듈의 RX 핀 (아두이노 우노 보드의 0번 핀)
-const int txPin = 1;  // WiFi 모듈의 TX 핀 (아두이노 우노 보드의 1번 핀)
-SoftwareSerial espSerial(rxPin, txPin); // SoftwareSerial 객체 생성
+const int rxPin = 0;                                                 // WiFi 모듈의 RX 핀 (아두이노 우노 보드의 0번 핀)
+const int txPin = 1;                                                 // WiFi 모듈의 TX 핀 (아두이노 우노 보드의 1번 핀)
+SoftwareSerial espSerial(rxPin, txPin);                             // SoftwareSerial 객체 생성
 #define VSYNC_PIN 2
 const char* ssid = "YourWiFiSSID";
 const char* password = "YourWiFiPassword";
@@ -45,7 +45,7 @@ void loop() {
       Serial.write(img[i]);
     }
     
-    // Wait for a short delay to control frame rate
-    delay(100); // Adjust the delay time according to frame rate
+                                                         // Wait for a short delay to control frame rate
+    delay(100);                                           // Adjust the delay time according to frame rate
   }
 }
