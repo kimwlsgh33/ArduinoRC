@@ -1,8 +1,8 @@
 #include <WiFi.h>
 #include <WiFiClient.h>                                                  // TCP/IP을 사용하기 위해 WiFiClient 라이브러리 추가
 
-const char* ssid = "YourWiFiSSID";                                      // WiFi 네트워크 이름
-const char* password = "YourWiFiPassword";                               // WiFi 비밀번호
+const char* ssid = "iptime_iot";                                      // WiFi 네트워크 이름
+const char* password = "1234567890!";                               // WiFi 비밀번호
 WiFiServer server(80);                                                    // WIFI 객체 생성 : ESP32에 WIFI 서버를 설정하고, 해당 서버가 포트 80
                                                                         //에서 클라이언트의 요청을 수신할 수 있도록 하기 위함( HTTP 프로토콜에서는 기본적으로 포트 80을 사용)
 

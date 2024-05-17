@@ -1,2 +1,9 @@
 build/
 libraries/
+
+sdkconfig
+sdkconfig.old
+
+.devcontainer/
+.vscode/
+.cache/
