@@ -1,7 +1,7 @@
 #include <SoftwareSerial.h>
 #include <OV7670_FIFO.h>
-const int rxPin = 0;                                                 // WiFi 모듈의 RX 핀 (아두이노 우노 보드의 0번 핀)
-const int txPin = 1;                                                 // WiFi 모듈의 TX 핀 (아두이노 우노 보드의 1번 핀)
+const int rxPin = 20;                                                 // WiFi 모듈의 RX 핀 
+const int txPin = 21;                                                 // WiFi 모듈의 TX 핀 
 SoftwareSerial espSerial(rxPin, txPin);                             // SoftwareSerial 객체 생성
 #define VSYNC_PIN 2
 const char* ssid = "YourWiFiSSID";
