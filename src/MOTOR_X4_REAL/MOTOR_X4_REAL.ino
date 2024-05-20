@@ -1,15 +1,15 @@
 #include <WiFi.h>
 #include <WiFiClient.h>                                                  // TCP/IP을 사용하기 위해 WiFiClient 라이브러리 추가
 
-const char* ssid = "YourWiFiSSID";                                      // WiFi 네트워크 이름
-const char* password = "YourWiFiPassword";                               // WiFi 비밀번호
+const char* ssid = "iptime_iot";                                      // WiFi 네트워크 이름
+const char* password = "1234567890!";                               // WiFi 비밀번호
 WiFiServer server(80);                                                    // WIFI 객체 생성 : ESP32에 WIFI 서버를 설정하고, 해당 서버가 포트 80
                                                                         //에서 클라이언트의 요청을 수신할 수 있도록 하기 위함( HTTP 프로토콜에서는 기본적으로 포트 80을 사용)
 
-#define MOTOR_PIN_1 3                                                  // 모터 제어 핀 1 (예: GPIO 21)
-#define MOTOR_PIN_2 5                                                  // 모터 제어 핀 2 (예: GPIO 22)
-#define MOTOR_PIN_3 7
-#define MOTOR_PIN_4 9
+#define MOTOR_PIN_1 0                                                 // 모터 제어 핀 1 (예: GPIO 21)
+#define MOTOR_PIN_2 1                                                  // 모터 제어 핀 2 (예: GPIO 22)
+#define MOTOR_PIN_3 2
+#define MOTOR_PIN_4 3
 
 void setup() {
   Serial.begin(115200);                                                 // 시리얼 통신 시작
@@ -42,7 +42,7 @@ void loop() {
         Serial.write(c);                                                // 시리얼 모니터에 출력
         if (c == '\n') {
           if (currentLine.length() == 0) {
-            cout << "command isn't available" << endl;
+            Serial.println("command isn't available");
             break;
           } else {
             currentLine = "";

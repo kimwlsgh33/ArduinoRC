@@ -1,14 +1,14 @@
+#define Motor1Pin1 0
+#define Motor1Pin2 1
+#define Motor1Pin1 2
 #define Motor1Pin1 3
-#define Motor1Pin2 5
-// #define Motor1Pin1 6
-// #define Motor1Pin1 9
 
 
 const int dcMotors[] = {Motor1Pin1, Motor1Pin2};
 const int forward[] = {HIGH, LOW, HIGH, LOW, HIGH, LOW, HIGH, LOW};
 const int backward[] = {LOW, HIGH, LOW, HIGH, LOW, HIGH, LOW, HIGH};
 const int STOP[] = {LOW, LOW, LOW, LOW, LOW, LOW, LOW, LOW};
-const int motorSpeed[] = {100, 200};
+const int motorSpeed[] = {50, 100, 150, 200};
 
 void setup() {
   // put your setup code here, to run once:
