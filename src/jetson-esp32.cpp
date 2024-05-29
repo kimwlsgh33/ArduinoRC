@@ -5,12 +5,15 @@
 #include <arpa/inet.h>
 #include <cstring>
 #include <iostream>
+#include <opencv2/opencv.hpp>
 #include <pthread.h>
 #include <unistd.h>
 
+using namespace cv;
+
 #define BUF_SIZE 1024
 
-void *receive(void *arg);
+void *receive_video(void *arg);
 void *send_command(void *arg);
 
 void print_usage(const char *prog_name) {
@@ -31,6 +34,8 @@ int create_socket() {
  * @detail 매개변수로 받은 IP와 PORT로socket에 연결
  */
 bool connect_socket(int sockfd, const char *ip, int port) {
+  std::cout << "Connecting to " << ip << ":" << port << std::endl;
+
   struct sockaddr_in addr;
   addr.sin_family = AF_INET;
   addr.sin_port = htons(port);
@@ -45,6 +50,8 @@ bool connect_socket(int sockfd, const char *ip, int port) {
 
 // ESP32에 message 전송 (err: -1)
 bool send_message(int sockfd, const char *message) {
+  std::cout << "Sending message: " << message << std::endl;
+
   if (send(sockfd, message, strlen(message), 0) < 0) {
     std::cerr << "send() error" << std::endl;
     return false;
@@ -77,7 +84,7 @@ int main(int argc, char **argv) {
   // read message from ESP32
   pthread_t receive_thread, send_thread;
   // receive()를 THREAD로 실행 (success: 0)
-  if (pthread_create(&receive_thread, nullptr, receive, &sockfd) != 0) {
+  if (pthread_create(&receive_thread, nullptr, receive_video, &sockfd) != 0) {
     std::cerr << "receive pthread_create() error\n" << std::endl;
     close(sockfd);
     return 1;
@@ -94,17 +101,28 @@ int main(int argc, char **argv) {
   pthread_join(receive_thread, nullptr);
   pthread_join(send_thread, nullptr);
 
+  destroyAllWindows();
   close(sockfd);
 }
 
-void *receive(void *arg) {
+void *receive_video(void *arg) {
   int sockfd = *(int *)arg;
   char buffer[BUF_SIZE] = {0};
 
   int bytesRead;
+  int frameSize;
+  std::vector<uchar> buf;
+
+  HOGDescriptor hog;
+  hog.setSVMDetector(HOGDescriptor::getDefaultPeopleDetector());
+
+  Mat frame;
   while (true) {
     std::cout << "Waiting for message..." << std::endl;
-    bytesRead = recv(sockfd, buffer, sizeof(buffer) - 1, 0);
+    bytesRead = recv(sockfd, &frameSize, sizeof(frameSize), 0);
+    buf.resize(frameSize);
+    bytesRead = recv(sockfd, buf.data(), frameSize, 0);
+
     if (bytesRead <= 0) {
       if (bytesRead < 0)
         std::cerr << "recv() error\n" << std::endl;
@@ -112,7 +130,27 @@ void *receive(void *arg) {
       return nullptr;
     }
 
-    buffer[bytesRead] = '\0'; // ensure string termination (null-terminated)
+    // Decode frame
+    frame = imdecode(buf, IMREAD_COLOR);
+    if (frame.empty()) {
+      std::cerr << "imdecode() error\n" << std::endl;
+      close(sockfd);
+      return nullptr;
+    }
+
+    std::vector<Rect> detected;
+    hog.detectMultiScale(frame, detected);
+    for (Rect r : detected) {
+      rectangle(frame, r, Scalar(0, 0, 255), 3);
+    }
+
+    // Display frame
+    imshow("Frame", frame);
+    if (waitKey(30) == 27) {
+      close(sockfd);
+      return nullptr;
+    }
+
     std::cout << "Message from server: " << buffer << std::endl;
   }
 }
